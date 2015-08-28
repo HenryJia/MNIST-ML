@@ -35,11 +35,11 @@ for i=1:size(X, 2)
 end
 
 for i=1:size(X, 2)
-    %if(sigma(:, i) > 0)
+    if(sigma(:, i) > 0)
         X_norm(:, i) = (X(:, i) - mu(:, i)) / sigma(:, i);
-    %else
-    %    X_norm(:, i) = zeros(size(X, 1), 1);
-    %endif
+    else
+        X_norm(:, i) = zeros(size(X, 1), 1);
+    endif
 end
 
 % ============================================================
