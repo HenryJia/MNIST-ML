@@ -68,7 +68,6 @@ for outputNum = 1:numOutputs
   end
   convolvedImage = convolvedImage + b(outputNum);
   %convolvedImage = sigmoid(convolvedImage);
-  convolvedImage = max(0, convolvedImage);
   convolvedFeatures(:, :, outputNum) = convolvedImage;
 end
 
