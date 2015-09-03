@@ -5,7 +5,7 @@ function [Theta1, Theta2, Theta3] = neural(X, YRaw)
 fprintf('Load Data\n');
 
 %X = load("trainXnonZero.csv");
-%YRaw = load("trainY.csv");;
+%YRaw = load("trainY.csv");
 
 m = length(YRaw);
 I = eye(10);
