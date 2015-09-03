@@ -1,5 +1,7 @@
 function outputMap = convForward(inputMap, theta, bias)
 
+% A non-vectorised version of cnnConvolve
+
 height = size(inputMap, 1) - (size(theta, 1) - 1);
 width = size(inputMap, 2) - (size(theta, 2) - 1);
 convHeight = size(theta, 1) - 1;

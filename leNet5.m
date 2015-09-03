@@ -1,4 +1,5 @@
-function [convTheta1, convBias1, convTheta2, convBias2, Theta1, Theta2, layer1, layer2, layer3, layer4, layer4Row, z2, a2, z3, a3 J] = leNet5(xRaw, yRaw, iters, alpha, convAlpha)
+function [convTheta1, convBias1, convTheta2, convBias2, convTheta3, convBias3, Theta1, Theta2, layer1, layer2, layer3, layer4, layer5, layer5Row, z2, a2, z3, a3, J] ...
+= leNet5(xRaw, yRaw, iters, alpha, convAlpha)
 
 m = size(xRaw, 1);
 
@@ -51,8 +52,6 @@ for i = 1:iters
 
   layer5 = cnnConvolve(4, l5Dim, layer4, convTheta3, convBias3);
   layer5 = max(0, layer5);
-  %size(layer5)
-  %size(squeeze(layer5))
 
   % Forward propagate through the MLP
   layer5Row = [1, squeeze(layer5)'];
@@ -78,14 +77,8 @@ for i = 1:iters
 
   % Back propagate the errors with respect to the inputs of the MLP (the output of the convolutional layers)
   convdelta5Row = (delta2 * Theta1')(:, 2:end);
-  %for j = 1:l3Dim
-  %  convdelta4(:, :, j) = rowToMat(convdelta4Row(1, ((j - 1) * 4 * 4 + 1):(j * 4 * 4)), 4, 4);
-  %end
   convdelta5 = reshape(convdelta5Row, 1, 1, l5Dim);
   convdelta5 = convdelta5 .* (layer5 > 0);
-  %size(convdelta4)
-  %convdelta4Row(1, 1:5)
-  %convdelta4(1, 1, 1:5)
 
   % Backpropagate error with respect to the second convolutional layer
   convdelta4 = zeros(size(layer4));
@@ -128,8 +121,6 @@ for i = 1:iters
   end
   convdelta1 = convdelta1 .* (layer1 > 0);
 
-  %convdelta3(:, :, 1)
-  %layer3(:, :, 1)
 
   % Back propagate the gradients with respect to convTheta. This can be done by convoluting the layer before the weights with the errors of the layers after the weights
   for j = 1:l3Dim
@@ -169,19 +160,6 @@ for i = 1:iters
     convBiasDelta1(j) = sum(sum(convdelta1(:, :, j)));
   end
 
-  %convBias3 = convBias3 - convAlpha * convBiasDelta3;
-  %convBias2 = convBias2 - convAlpha * convBiasDelta2;
-  %convBias1 = convBias1 - convAlpha * convBiasDelta1;
-
-  % Apply gradients to stochastic gradient descent
-  %convTheta3 = convTheta3 - convAlpha * convDelta3;
-  %convTheta2 = convTheta2 - convAlpha * convDelta2;
-  %convTheta1 = convTheta1 - convAlpha * convDelta1;
-
-  %figure((i - 1) * iters + b)
-  %imshow(convTheta2(:, :, 1), [min(min(convTheta2(:, :, 1))), max(max(convTheta2(:, :, 1)))])
-
-
   % For Gradient checking
   epsilon = 10^-5;
   %convTheta3(1, 2, 15, 101) += epsilon;
@@ -204,8 +182,6 @@ for i = 1:iters
 
   layer5 = cnnConvolve(4, l5Dim, layer4, convTheta3, convBias3);
   layer5 = max(0, layer5);
-  %size(layer5)
-  %size(squeeze(layer5))
 
   % Forward propagate through the MLP
   layer5Row = [1, squeeze(layer5)'];
@@ -229,6 +205,15 @@ for i = 1:iters
   %convBiasDelta1
   %size(squeeze(convdelta3))
   %size(squeeze(convdelta2))
+
+  convBias3 = convBias3 - convAlpha * convBiasDelta3;
+  convBias2 = convBias2 - convAlpha * convBiasDelta2;
+  convBias1 = convBias1 - convAlpha * convBiasDelta1;
+
+  % Apply gradients to stochastic gradient descent
+  convTheta3 = convTheta3 - convAlpha * convDelta3;
+  convTheta2 = convTheta2 - convAlpha * convDelta2;
+  convTheta1 = convTheta1 - convAlpha * convDelta1;
 
   Theta2 = Theta2 - alpha * Delta2';
   Theta1 = Theta1 - alpha * Delta1';
